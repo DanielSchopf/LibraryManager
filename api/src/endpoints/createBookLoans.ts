@@ -10,8 +10,8 @@ const pool = new Pool({
     port: parseInt(process.env.DB_PORT || "5432"),
 });
 
+// EndPoint para criar novos empréstimos
 export const createBookLoan = async (req: Request, res: Response) => {
-    console.log(req.body); // Adicione este log para verificar o corpo da requisição
 
     const { bookId, startDate, customer } = req.body;
 
@@ -19,6 +19,7 @@ export const createBookLoan = async (req: Request, res: Response) => {
         return res.status(400).json({ error: "Parâmetros bookId, startDate e customer são obrigatórios" });
     }
 
+    // Calculos para definir o dia de entrega e ajustar caso seja no final de semana
     let returnDate = calculateReturnDate(new Date(startDate));
     returnDate = adjustToNextMonday(returnDate);
 
@@ -32,11 +33,13 @@ export const createBookLoan = async (req: Request, res: Response) => {
             [bookId]
         );
 
+        // Verifica se o livro existe
         if (!checkBook.rows.length) {
             await pool.query('ROLLBACK');
             return res.status(400).json({ error: 'Livro não encontrado' });
         }
 
+        // Verifica se o livro está disponível
         if (!checkBook.rows[0].available) {
             await pool.query('ROLLBACK');
             return res.status(400).json({ error: 'Livro não está disponível para empréstimo' });

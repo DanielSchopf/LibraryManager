@@ -5,13 +5,13 @@ import { getBookLoans, updateBookLoan, deleteBookLoan } from '../../services/Boo
 import { FaEdit, FaTrash } from 'react-icons/fa';
 
 export function BookLoanList() {
-  const [loans, setLoans] = useState<any[]>([]);
-  const [showEditModal, setShowEditModal] = useState(false);
-  const [currentLoan, setCurrentLoan] = useState<any>(null);
-  const [status, setStatus] = useState('');
+  const [loans, setLoans] = useState<any[]>([]); // Empréstimos
+  const [showEditModal, setShowEditModal] = useState(false); // Estado do modal
+  const [currentLoan, setCurrentLoan] = useState<any>(null); // Empréstimo atual
+  const [status, setStatus] = useState(''); 
 
+  // Carrega a lista de empréstimos quando o componente é montado
   useEffect(() => {
-    // Carrega a lista de empréstimos quando o componente é montado
     const fetchLoans = async () => {
       try {
         const fetchedLoans = await getBookLoans();
@@ -24,12 +24,14 @@ export function BookLoanList() {
     fetchLoans();
   }, []);
 
+  // Função para o botão de editar
   const handleEditClick = (loan: any) => {
     setCurrentLoan(loan);
     setStatus(loan.status);
     setShowEditModal(true);
   };
 
+  // Função para atualizar o empréstimo
   const handleUpdate = async () => {
     if (currentLoan) {
       const payload = {
@@ -39,23 +41,24 @@ export function BookLoanList() {
       };
   
       try {
-        await updateBookLoan(payload);
-        const updatedLoans = await getBookLoans();
+        await updateBookLoan(payload); // Atualiza empréstimos
+        const updatedLoans = await getBookLoans(); // Obtem lista atualizada de empréstimos
         console.log('Empréstimos atualizados:', updatedLoans);
-        setLoans(updatedLoans);
-        setShowEditModal(false);
+        setLoans(updatedLoans); // Atualiza estado com os empréstimos atualizados
+        setShowEditModal(false); // Fecha o modal de edição
       } catch (error) {
         console.error('Erro ao atualizar o empréstimo:', error);
       }
     }
   };
 
+  // Funçaõ para deletar o empréstimo
   const handleDelete = async (loanId: number) => {
     if (window.confirm('Tem certeza que deseja excluir este empréstimo?')) {
       try {
-        await deleteBookLoan(loanId);
-        const updatedLoans = await getBookLoans();
-        setLoans(updatedLoans);
+        await deleteBookLoan(loanId); // Exclui emprestimo
+        const updatedLoans = await getBookLoans(); // Obtem lista atualizada de empréstimos
+        setLoans(updatedLoans); // Atualiza estado com os empréstimos atualizados
         
       } catch (error) {
         console.error('Erro ao excluir o empréstimo:', error);
@@ -63,7 +66,7 @@ export function BookLoanList() {
     }
   };
 
-  // Função para formatar a data 
+  // Função para formatar a data(erro de diminuir 1 dia devido ao padrao do fuso horario)
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     const day = date.getUTCDate();

@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { Form, Button, Alert } from 'react-bootstrap';
-import { getAvailableBooks, createBookLoan } from '../../services/BookLoansService'; // Atualize o caminho conforme necessário
+import { getAvailableBooks, createBookLoan } from '../../services/BookLoansService';
 
-// Definindo interfaces para os tipos
+// Definindo interfaces para os tipos de livro
 interface Book {
     id: number;
     title: string;
 }
 
+// Definindo interface para o payload de criação de empréstimos
 interface CreateBookLoanPayload {
     bookId: number;
     startDate: string;
@@ -15,13 +16,14 @@ interface CreateBookLoanPayload {
 }
 
 export function CreateBookLoan() {
-    const [books, setBooks] = useState<Book[]>([]);
-    const [selectedBookId, setSelectedBookId] = useState<string>('');
-    const [customer, setCustomer] = useState<string>('');
-    const [loanDate, setLoanDate] = useState<string>('');
-    const [error, setError] = useState<string>('');
-    const [success, setSuccess] = useState<string>('');
+    const [books, setBooks] = useState<Book[]>([]); // Livros disponíveis
+    const [selectedBookId, setSelectedBookId] = useState<string>(''); // Id do livro selecionado
+    const [customer, setCustomer] = useState<string>(''); // Nome do cliente
+    const [loanDate, setLoanDate] = useState<string>(''); // data do empréstimo
+    const [error, setError] = useState<string>(''); // Mensagem de erro
+    const [success, setSuccess] = useState<string>(''); // Mensagem de sucesso
 
+    // Busca livros disponíveis
     useEffect(() => {
         const fetchBooks = async () => {
             try {
@@ -35,26 +37,32 @@ export function CreateBookLoan() {
         fetchBooks();
     }, []);
 
+    // Função para o envio do formulário
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
+        // Verifica se os campos foram preenchidos
         if (!selectedBookId || !customer || !loanDate) {
             setError('Todos os campos são obrigatórios');
             return;
         }
 
         try {
+            // cria o empréstimo
             await createBookLoan({
                 bookId: parseInt(selectedBookId),
                 startDate: loanDate,
                 customer
             });
+
+            // Em caso de sucesso, exibe mensagem e limpa os campos
             setSuccess('Empréstimo criado com sucesso');
             setError('');
             setCustomer('');
             setLoanDate('');
             setSelectedBookId('');
         } catch (error) {
+            // Em caso de erro, exibe a mensagem de erro
             setError('Erro ao criar o empréstimo');
             setSuccess('');
         }

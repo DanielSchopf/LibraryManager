@@ -9,6 +9,8 @@ const pool = new Pool({
     port: parseInt(process.env.DB_PORT || '5432'),
 });
 
+// EndPoint para deletar um empréstimo
+
 export const deleteBookLoan = async (req: Request, res: Response) => {
     const { loanId } = req.params;
 
@@ -20,7 +22,7 @@ export const deleteBookLoan = async (req: Request, res: Response) => {
             `SELECT book_id, status FROM book_loans WHERE id = $1`,
             [loanId]
         );
-
+        
         if (!loanCheck.rows.length) {
             await pool.query('ROLLBACK');
             return res.status(404).json({ error: 'Empréstimo não encontrado' });

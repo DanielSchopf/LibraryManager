@@ -1,9 +1,12 @@
+
+// Função para calcular a data de retorno
 export const calculateReturnDate = (startDate: Date): Date => {
     let returnDate = new Date(startDate);
     returnDate.setDate(returnDate.getDate() + 30);
     return returnDate;
 };
 
+// Ajuste da data em caso de finais de semana
 export const adjustToNextMonday = (date: Date): Date => {
     const adjustedDate = new Date(date); // Faz uma cópia da data original
     const day = adjustedDate.getDay();
@@ -17,7 +20,7 @@ export const adjustToNextMonday = (date: Date): Date => {
     return adjustedDate;
 };
 
-
+// Função para calcular a multa de atraso
 export const calculateFine = (expectedReturnDate: Date, actualReturnDate: Date): number => {
     const ONE_DAY = 24 * 60 * 60 * 1000; 
 

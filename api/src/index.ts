@@ -8,11 +8,15 @@ import dotenv from 'dotenv'
 import { deleteBookLoan } from "./endpoints/deleteBookLoan"
 import { getAvailableBooks } from "./endpoints/booksAvailable"
 
+// Carrega variáveis de ambiente
 dotenv.config();
 
+// Configura porta da API
 const API_PORT = 8080
 const api = express()
 
+
+// Configura o cliente do postgreSQL usando as variáveis de ambiente
 const client = new Client({
     user: process.env.DB_USER,
     host: process.env.DB_HOST,
@@ -33,6 +37,7 @@ api.get("/", (request, response) => {
     response.send("API is up")
 })
 
+// Endpoits 
 api.get('/book-loans', listBookLoans);
 api.post('/book-loan-create', createBookLoan)
 api.put('/book-loan-update', updateBookLoan)

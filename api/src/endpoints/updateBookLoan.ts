@@ -10,6 +10,7 @@ const pool = new Pool({
     port: parseInt(process.env.DB_PORT || "5432"),
 });
 
+// EndPoint para atualizar status de um empréstimo
 export const updateBookLoan = async (req: Request, res: Response) => {
     const { loanId, status, actualReturnDate } = req.body;
 

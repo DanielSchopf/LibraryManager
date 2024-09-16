@@ -9,7 +9,7 @@ const pool = new Pool ({
     port: parseInt(process.env.DB_PORT || '5432'),
 })
 
-
+// EndPoint para listar todos empréstimos já feitos
 export const listBookLoans = async (req: Request, res: Response) => {
     try {
         console.log('Received request to list book loans');
